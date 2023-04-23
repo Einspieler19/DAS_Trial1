@@ -12,3 +12,34 @@ ERROR: [COSIM 212-360] Aborting co-simulation: C TB simulation failed.
 ERROR: [COSIM 212-320] C TB testing failed, stop generating test vectors. Please check C TB or re-run cosim.
 ERROR: [COSIM 212-5] *** C/RTL co-simulation file generation failed. ***
 ERROR: [COSIM 212-4] *** C/RTL co-simulation finished: FAIL ***
+
+
+
+
+try {
+#ifdef POST_CHECK
+    CodeState = ENTER_WRAPC_PC;
+    check(port4);
+#else
+    static hls::sim::RefTCL tcl("../tv/cdatafile/ref.tcl");
+    CodeState = DUMP_INPUTS;
+    dump(port0, port0.iwriter, tcl.AESL_transaction);
+    dump(port1, port1.iwriter, tcl.AESL_transaction);
+    dump(port2, port2.iwriter, tcl.AESL_transaction);
+    dump(port3, port3.iwriter, tcl.AESL_transaction);
+    dump(port4, port4.iwriter, tcl.AESL_transaction);
+    port0.doTCL(tcl);
+    port1.doTCL(tcl);
+    port2.doTCL(tcl);
+    port3.doTCL(tcl);
+    port4.doTCL(tcl);
+    CodeState = CALL_C_DUT;
+    DASTrial1_hw_stub_wrapper(__xlx_apatb_param_signal_r, __xlx_apatb_param_signalLength, __xlx_apatb_param_azimuthAngle, __xlx_apatb_param_elevationAngle, __xlx_apatb_param_summedSignal);
+    CodeState = DUMP_OUTPUTS;
+    dump(port4, port4.owriter, tcl.AESL_transaction);
+    tcl.AESL_transaction++;
+#endif
+  } catch (const hls::sim::SimException &e) {
+    hls::sim::errExit(e.line, e.msg);
+  }
+}
