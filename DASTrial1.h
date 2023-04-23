@@ -56,7 +56,7 @@ ALL TIMES.
 
 #define FLOAT_DATA // Used to select error tolerance in test program
 
-double DASTrial1(double* signal, int signalLength, double delayAngle);
+void DASTrial1(double* signal, int signalLength, double azimuthAngle, double elevationAngle, double *summedSignal);
 
 
 #endif

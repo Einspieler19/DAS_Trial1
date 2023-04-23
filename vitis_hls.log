@@ -1,9 +1,9 @@
 INFO: [HLS 200-10] Running '/opt/Xilinx/Vitis_HLS/2022.2/bin/unwrapped/lnx64.o/vitis_hls'
-INFO: [HLS 200-10] For user 'dian' on host 'entmpc75' (Linux_x86_64 version 5.4.0-146-generic) on Wed Apr 19 12:07:30 CEST 2023
+INFO: [HLS 200-10] For user 'dian' on host 'entmpc75' (Linux_x86_64 version 5.4.0-146-generic) on Sun Apr 23 14:13:44 CEST 2023
 INFO: [HLS 200-10] On os Ubuntu 18.04.6 LTS
 INFO: [HLS 200-10] In directory '/home/dian/ModelComposer/MyProject/HLS_Trials/Trial1'
-Sourcing Tcl script '/home/dian/ModelComposer/MyProject/HLS_Trials/Trial1/DASTrial1_prj/solution1/csynth.tcl'
-INFO: [HLS 200-1510] Running: source /home/dian/ModelComposer/MyProject/HLS_Trials/Trial1/DASTrial1_prj/solution1/csynth.tcl
+Sourcing Tcl script '/home/dian/ModelComposer/MyProject/HLS_Trials/Trial1/DASTrial1_prj/solution1/cosim.tcl'
+INFO: [HLS 200-1510] Running: source /home/dian/ModelComposer/MyProject/HLS_Trials/Trial1/DASTrial1_prj/solution1/cosim.tcl
 INFO: [HLS 200-1510] Running: open_project DASTrial1_prj 
 INFO: [HLS 200-10] Opening project '/home/dian/ModelComposer/MyProject/HLS_Trials/Trial1/DASTrial1_prj'.
 INFO: [HLS 200-1510] Running: set_top DASTrial1 
@@ -21,197 +21,42 @@ INFO: [HLS 200-1464] Running solution command: config_interface -m_axi_latency=0
 INFO: [HLS 200-1510] Running: set_part xc7v585t-ffg1157-1 
 INFO: [HLS 200-1510] Running: create_clock -period 10 -name default 
 INFO: [HLS 200-1510] Running: config_interface -m_axi_latency 0 
-INFO: [HLS 200-1510] Running: csynth_design 
-Running Dispatch Server on port: 35005
-INFO: [HLS 200-111] Finished File checks and directory preparation: CPU user time: 0.01 seconds. CPU system time: 0.01 seconds. Elapsed time: 10.02 seconds; current allocated memory: 205.176 MB.
-INFO: [HLS 200-10] Analyzing design file 'DASTrial1.cpp' ... 
-INFO: [HLS 200-111] Finished Source Code Analysis and Preprocessing: CPU user time: 3.47 seconds. CPU system time: 0.41 seconds. Elapsed time: 3.89 seconds; current allocated memory: 205.176 MB.
-INFO: [HLS 200-777] Using interface defaults for 'Vivado' flow target.
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::fp_struct(double)' into 'void range_redux_payne_hanek_hotbm<61, double, 63, 63>(double, ap_uint<3>&, ap_ufixed<63, 0, (ap_q_mode)5, (ap_o_mode)3, 0>&, ap_ufixed<63, 0, (ap_q_mode)5, (ap_o_mode)3, 0>&, ap_int<fp_struct<double>::EXP_BITS>&)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_range_redux.h:466:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::expv() const' into 'void range_redux_payne_hanek_hotbm<61, double, 63, 63>(double, ap_uint<3>&, ap_ufixed<63, 0, (ap_q_mode)5, (ap_o_mode)3, 0>&, ap_ufixed<63, 0, (ap_q_mode)5, (ap_o_mode)3, 0>&, ap_int<fp_struct<double>::EXP_BITS>&)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_range_redux.h:466:0)
-INFO: [HLS 214-178] Inlining function 'ap_uint<(((2) * ((52) + (1))) + (61)) + (3)> table_lookup_4oPi_hotbm<52, 61>(int, double)' into 'void range_redux_payne_hanek_hotbm<61, double, 63, 63>(double, ap_uint<3>&, ap_ufixed<63, 0, (ap_q_mode)5, (ap_o_mode)3, 0>&, ap_ufixed<63, 0, (ap_q_mode)5, (ap_o_mode)3, 0>&, ap_int<fp_struct<double>::EXP_BITS>&)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_range_redux.h:466:0)
-INFO: [HLS 214-178] Inlining function 'unsigned int clz<61, 124, 0>(ap_ufixed<124, 0, (ap_q_mode)5, (ap_o_mode)3, 0>)' into 'void range_redux_payne_hanek_hotbm<61, double, 63, 63>(double, ap_uint<3>&, ap_ufixed<63, 0, (ap_q_mode)5, (ap_o_mode)3, 0>&, ap_ufixed<63, 0, (ap_q_mode)5, (ap_o_mode)3, 0>&, ap_int<fp_struct<double>::EXP_BITS>&)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_range_redux.h:466:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::data() const (.69.88.97.108.117.128.137.148.157.168.177)' into 'fp_struct<double>::to_double() const (.85.94.105.114.125.134.145.154.165.174)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/src/hls/utils/x_hls_utils.h:523:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::to_double() const (.85.94.105.114.125.134.145.154.165.174)' into 'fp_struct<double>::to_ieee() const' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/src/hls/utils/x_hls_utils.h:538:0)
-INFO: [HLS 214-178] Inlining function 'clz(int) (.32953)' into 'void scaled_fixed2ieee<63, 1>(ap_ufixed<63, 1, (ap_q_mode)5, (ap_o_mode)3, 0>, double&, int)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/src/hls/utils/x_hls_float_utils.h:419:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::set_mantissa(ap_ufixed<53, 1, (ap_q_mode)5, (ap_o_mode)3, 0>)' into 'void scaled_fixed2ieee<63, 1>(ap_ufixed<63, 1, (ap_q_mode)5, (ap_o_mode)3, 0>, double&, int)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/src/hls/utils/x_hls_float_utils.h:419:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::to_ieee() const' into 'void scaled_fixed2ieee<63, 1>(ap_ufixed<63, 1, (ap_q_mode)5, (ap_o_mode)3, 0>, double&, int)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/src/hls/utils/x_hls_float_utils.h:419:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::fp_struct(double)' into 'double hotbm_::sin_or_cos<double>(double, bool, bool)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_hotbm.h:239:0)
-INFO: [HLS 214-178] Inlining function 'void range_redux_payne_hanek_hotbm<61, double, 63, 63>(double, ap_uint<3>&, ap_ufixed<63, 0, (ap_q_mode)5, (ap_o_mode)3, 0>&, ap_ufixed<63, 0, (ap_q_mode)5, (ap_o_mode)3, 0>&, ap_int<fp_struct<double>::EXP_BITS>&)' into 'double hotbm_::sin_or_cos<double>(double, bool, bool)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_hotbm.h:239:0)
-INFO: [HLS 214-178] Inlining function 'ap_ufixed<63, 1, (ap_q_mode)5, (ap_o_mode)3, 0> hotbm_::value_list<double>::sin_or_cos_approximation<63, 63>(bool, ap_uint<3>&, ap_ufixed<63, 0, (ap_q_mode)5, (ap_o_mode)3, 0>&, ap_ufixed<63, 0, (ap_q_mode)5, (ap_o_mode)3, 0>&, ap_int<11>&)' into 'double hotbm_::sin_or_cos<double>(double, bool, bool)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_hotbm.h:239:0)
-INFO: [HLS 214-178] Inlining function 'void scaled_fixed2ieee<63, 1>(ap_ufixed<63, 1, (ap_q_mode)5, (ap_o_mode)3, 0>, double&, int)' into 'double hotbm_::sin_or_cos<double>(double, bool, bool)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_hotbm.h:239:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::to_ieee() const' into 'double hotbm_::sin_or_cos<double>(double, bool, bool)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_hotbm.h:239:0)
-INFO: [HLS 214-178] Inlining function 'hotbm_::sin(double)' into 'sin' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/src/c/sincosdouble.cpp:7:0)
-INFO: [HLS 214-178] Inlining function 'sin' into 'computeDelayTime(int, double)' (DASTrial1.cpp:6:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::fp_struct(double)' into 'double generic_copysign<double>(double, double)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_copysign.h:10:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::to_ieee() const' into 'double generic_copysign<double>(double, double)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_copysign.h:10:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::fp_struct(double)' into 'double generic_round<double>(double)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_round.h:189:0)
-INFO: [HLS 214-178] Inlining function 'double generic_copysign<double>(double, double)' into 'double generic_round<double>(double)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_round.h:189:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::data() const (.69.88.97.108.117.128.137.148.157.168.177)' into 'double generic_round<double>(double)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_round.h:189:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::fp_struct(ap_uint<64>)' into 'double generic_round<double>(double)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_round.h:189:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::to_ieee() const' into 'double generic_round<double>(double)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_round.h:189:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::fp_struct(double)' into 'int generic_cast_IEEE754<int, (ap_q_mode)6, double>(double, bool, hls::enable_if<std::numeric_limits<int>::is_signed, bool>::type)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_case_IEEE754.h:12:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::mantissa() const' into 'int generic_cast_IEEE754<int, (ap_q_mode)6, double>(double, bool, hls::enable_if<std::numeric_limits<int>::is_signed, bool>::type)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_case_IEEE754.h:12:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::expv() const' into 'int generic_cast_IEEE754<int, (ap_q_mode)6, double>(double, bool, hls::enable_if<std::numeric_limits<int>::is_signed, bool>::type)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_case_IEEE754.h:12:0)
-INFO: [HLS 214-178] Inlining function 'fp_struct<double>::__signbit() const' into 'int generic_cast_IEEE754<int, (ap_q_mode)6, double>(double, bool, hls::enable_if<std::numeric_limits<int>::is_signed, bool>::type)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_case_IEEE754.h:12:0)
-INFO: [HLS 214-178] Inlining function 'int generic_cast_IEEE754<int, (ap_q_mode)6, double>(double, bool, hls::enable_if<std::numeric_limits<int>::is_signed, bool>::type)' into 'int generic_cast_IEEE754<int, double>(double, bool)' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_case_IEEE754.h:116:0)
-INFO: [HLS 214-178] Inlining function 'int generic_cast_IEEE754<int, double>(double, bool)' into '__hls_fptosi_double_i32' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/src/lib_floatconversion.cpp:55:0)
-INFO: [HLS 214-178] Inlining function 'computeDelayTime(int, double)' into 'DASTrial1(double*, int, double)' (DASTrial1.cpp:12:0)
-INFO: [HLS 214-178] Inlining function 'round' into 'DASTrial1(double*, int, double)' (DASTrial1.cpp:12:0)
-INFO: [HLS 214-178] Inlining function '__hls_fptosi_double_i32' into 'DASTrial1(double*, int, double)' (DASTrial1.cpp:12:0)
-INFO: [HLS 214-248] Applying array_partition to '_ZZN6hotbm_10value_listIdE24sin_or_cos_approximationILi63ELi63EEE9ap_ufixedIXT_ELi1EL9ap_q_mode5EL9ap_o_mode3ELi0EEbR7ap_uintILi3EERS3_IXT_ELi0ELS4_5ELS5_3ELi0EERS3_IXT0_ELi0ELS4_5ELS5_3ELi0EER6ap_intILi11EEE10swap_table': Complete partitioning on dimension 1. (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/src/common/hls_hotbm_double.cpp:14:0)
-INFO: [HLS 214-248] Applying array_partition to '_ZZN6hotbm_10sin_or_cosIdEET_S1_bbE13neg_cos_table': Complete partitioning on dimension 1. (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_hotbm.h:246:0)
-INFO: [HLS 214-248] Applying array_partition to '_ZZN6hotbm_10sin_or_cosIdEET_S1_bbE13neg_sin_table': Complete partitioning on dimension 1. (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_hotbm.h:245:0)
-INFO: [HLS 214-248] Applying array_partition to '_ZZN6hotbm_10sin_or_cosIdEET_S1_bbE10swap_table': Complete partitioning on dimension 1. (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_hotbm.h:244:0)
-WARNING: [HLS 214-358] Array transformation on index using bit extension logic may lead to poor performance. Please use int or long for array index computation to benefit from optimizations. (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/src/common/hls_hotbm_double.cpp:29:67)
-INFO: [HLS 200-111] Finished Compiling Optimization and Transform: CPU user time: 10.04 seconds. CPU system time: 0.75 seconds. Elapsed time: 10.79 seconds; current allocated memory: 206.828 MB.
-INFO: [HLS 200-111] Finished Checking Pragmas: CPU user time: 0 seconds. CPU system time: 0 seconds. Elapsed time: 0 seconds; current allocated memory: 206.828 MB.
-INFO: [HLS 200-10] Starting code transformations ...
-INFO: [HLS 200-111] Finished Standard Transforms: CPU user time: 0.86 seconds. CPU system time: 0.11 seconds. Elapsed time: 0.97 seconds; current allocated memory: 322.512 MB.
-INFO: [HLS 200-10] Checking synthesizability ...
-INFO: [XFORM 203-602] Inlining function 'generic_round<double>' into 'DASTrial1' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/src/c/rounddouble.cpp:7) automatically.
-WARNING: [SYNCHK 200-23] /wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/include/header_files/ap_fixed_ref.h:594: variable-indexed range selection may cause suboptimal QoR.
-INFO: [SYNCHK 200-10] 0 error(s), 1 warning(s).
-INFO: [HLS 200-111] Finished Checking Synthesizability: CPU user time: 2.1 seconds. CPU system time: 0.1 seconds. Elapsed time: 2.22 seconds; current allocated memory: 512.051 MB.
-INFO: [XFORM 203-510] Pipelining loop 'VITIS_LOOP_27_1' (DASTrial1.cpp:27) in function 'DASTrial1' automatically.
-INFO: [XFORM 203-510] Pipelining loop 'VITIS_LOOP_44_4' (DASTrial1.cpp:43) in function 'DASTrial1' automatically.
-INFO: [XFORM 203-502] Unrolling all loops for pipelining in function 'hotbm_::sin_or_cos<double>' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_hotbm.h:16:15).
-INFO: [HLS 200-489] Unrolling loop 'Loop-1' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/src/hls/utils/x_hls_float_utils.h:430) in function 'hotbm_::sin_or_cos<double>' completely with a factor of 3.
-INFO: [HLS 200-489] Unrolling loop 'Loop-2' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/src/hls/utils/x_hls_float_utils.h:443) in function 'hotbm_::sin_or_cos<double>' completely with a factor of 4.
-INFO: [HLS 200-489] Unrolling loop 'Loop-3' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/src/hls/utils/x_hls_float_utils.h:450) in function 'hotbm_::sin_or_cos<double>' completely with a factor of 4.
-INFO: [XFORM 203-102] Partitioning array 'out_bits.V' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/src/hls/utils/x_hls_float_utils.h:429) automatically.
-INFO: [XFORM 203-102] Partitioning array 'c' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/src/hls/utils/x_hls_float_utils.h:442) automatically.
-INFO: [XFORM 203-602] Inlining function 'generic_round<double>' into 'DASTrial1' (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/src/c/rounddouble.cpp:7) automatically.
-INFO: [XFORM 203-401] Performing if-conversion on hyperblock from (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/src/hls/utils/x_hls_utils.h:488:31) to (/wrk/ci/prod/2022.2/hls_product/continuous/608/2022.2/src/shared/hls/clib/hlsmath/include/FloatingPoint/hls_hotbm.h:316:5) in function 'hotbm_::sin_or_cos<double>'... converting 12 basic blocks.
-INFO: [XFORM 203-401] Performing if-conversion on hyperblock from (DASTrial1.cpp:43:16) to (DASTrial1.cpp:44:26) in function 'DASTrial1'... converting 7 basic blocks.
-INFO: [HLS 200-111] Finished Loop, function and other optimizations: CPU user time: 1.93 seconds. CPU system time: 0.12 seconds. Elapsed time: 2.05 seconds; current allocated memory: 724.207 MB.
-INFO: [XFORM 203-541] Flattening a loop nest 'VITIS_LOOP_41_3' (DASTrial1.cpp:40:12) in function 'DASTrial1'.
-INFO: [HLS 200-472] Inferring partial write operation for 'delayTimes' (DASTrial1.cpp:28:23)
-INFO: [HLS 200-111] Finished Architecture Synthesis: CPU user time: 1.04 seconds. CPU system time: 0.06 seconds. Elapsed time: 1.09 seconds; current allocated memory: 797.414 MB.
-INFO: [HLS 200-10] Starting hardware synthesis ...
-INFO: [HLS 200-10] Synthesizing 'DASTrial1' ...
-WARNING: [SYN 201-103] Legalizing function name 'sin_or_cos<double>' to 'sin_or_cos_double_s'.
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [HLS 200-42] -- Implementing module 'sin_or_cos_double_s' 
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [SCHED 204-11] Starting scheduling ...
-INFO: [SCHED 204-61] Pipelining function 'sin_or_cos<double>'.
-INFO: [HLS 200-1470] Pipelining result : Target II = NA, Final II = 1, Depth = 24, function 'sin_or_cos<double>'
-INFO: [SCHED 204-11] Finished scheduling.
-INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.54 seconds. CPU system time: 0.04 seconds. Elapsed time: 0.59 seconds; current allocated memory: 798.914 MB.
-INFO: [BIND 205-100] Starting micro-architecture generation ...
-INFO: [BIND 205-101] Performing variable lifetime analysis.
-INFO: [BIND 205-101] Exploring resource sharing.
-INFO: [BIND 205-101] Binding ...
-INFO: [BIND 205-100] Finished micro-architecture generation.
-INFO: [HLS 200-111] Finished Binding: CPU user time: 0.37 seconds. CPU system time: 0 seconds. Elapsed time: 0.36 seconds; current allocated memory: 798.914 MB.
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [HLS 200-42] -- Implementing module 'DASTrial1_Pipeline_VITIS_LOOP_27_1' 
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [SCHED 204-11] Starting scheduling ...
-INFO: [SCHED 204-61] Pipelining loop 'VITIS_LOOP_27_1'.
-INFO: [HLS 200-1470] Pipelining result : Target II = NA, Final II = 1, Depth = 49, loop 'VITIS_LOOP_27_1'
-INFO: [SCHED 204-11] Finished scheduling.
-INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.59 seconds. CPU system time: 0 seconds. Elapsed time: 0.6 seconds; current allocated memory: 798.914 MB.
-INFO: [BIND 205-100] Starting micro-architecture generation ...
-INFO: [BIND 205-101] Performing variable lifetime analysis.
-INFO: [BIND 205-101] Exploring resource sharing.
-INFO: [BIND 205-101] Binding ...
-INFO: [BIND 205-100] Finished micro-architecture generation.
-INFO: [HLS 200-111] Finished Binding: CPU user time: 0.49 seconds. CPU system time: 0 seconds. Elapsed time: 0.49 seconds; current allocated memory: 798.914 MB.
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [HLS 200-42] -- Implementing module 'DASTrial1_Pipeline_VITIS_LOOP_41_3_VITIS_LOOP_44_4' 
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [SCHED 204-11] Starting scheduling ...
-INFO: [SCHED 204-61] Pipelining loop 'VITIS_LOOP_41_3_VITIS_LOOP_44_4'.
-WARNING: [HLS 200-880] The II Violation in module 'DASTrial1_Pipeline_VITIS_LOOP_41_3_VITIS_LOOP_44_4' (loop 'VITIS_LOOP_41_3_VITIS_LOOP_44_4'): Unable to enforce a carried dependence constraint (II = 1, distance = 1, offset = 1) between 'dadd' operation ('arraySignal', DASTrial1.cpp:49) and 'select' operation ('select_ln41_1', DASTrial1.cpp:41).
-Resolution: For help on HLS 200-880 see www.xilinx.com/cgi-bin/docs/rdoc?v=2022.2;t=hls+guidance;d=200-880.html
-WARNING: [HLS 200-880] The II Violation in module 'DASTrial1_Pipeline_VITIS_LOOP_41_3_VITIS_LOOP_44_4' (loop 'VITIS_LOOP_41_3_VITIS_LOOP_44_4'): Unable to enforce a carried dependence constraint (II = 2, distance = 1, offset = 1) between 'dadd' operation ('arraySignal', DASTrial1.cpp:49) and 'select' operation ('select_ln41_1', DASTrial1.cpp:41).
-Resolution: For help on HLS 200-880 see www.xilinx.com/cgi-bin/docs/rdoc?v=2022.2;t=hls+guidance;d=200-880.html
-WARNING: [HLS 200-880] The II Violation in module 'DASTrial1_Pipeline_VITIS_LOOP_41_3_VITIS_LOOP_44_4' (loop 'VITIS_LOOP_41_3_VITIS_LOOP_44_4'): Unable to enforce a carried dependence constraint (II = 3, distance = 1, offset = 1) between 'dadd' operation ('arraySignal', DASTrial1.cpp:49) and 'select' operation ('select_ln41_1', DASTrial1.cpp:41).
-Resolution: For help on HLS 200-880 see www.xilinx.com/cgi-bin/docs/rdoc?v=2022.2;t=hls+guidance;d=200-880.html
-WARNING: [HLS 200-880] The II Violation in module 'DASTrial1_Pipeline_VITIS_LOOP_41_3_VITIS_LOOP_44_4' (loop 'VITIS_LOOP_41_3_VITIS_LOOP_44_4'): Unable to enforce a carried dependence constraint (II = 4, distance = 1, offset = 1) between 'dadd' operation ('arraySignal', DASTrial1.cpp:49) and 'select' operation ('select_ln41_1', DASTrial1.cpp:41).
-Resolution: For help on HLS 200-880 see www.xilinx.com/cgi-bin/docs/rdoc?v=2022.2;t=hls+guidance;d=200-880.html
-INFO: [HLS 200-1470] Pipelining result : Target II = NA, Final II = 5, Depth = 15, loop 'VITIS_LOOP_41_3_VITIS_LOOP_44_4'
-INFO: [SCHED 204-11] Finished scheduling.
-INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.64 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.65 seconds; current allocated memory: 799.609 MB.
-INFO: [BIND 205-100] Starting micro-architecture generation ...
-INFO: [BIND 205-101] Performing variable lifetime analysis.
-INFO: [BIND 205-101] Exploring resource sharing.
-INFO: [BIND 205-101] Binding ...
-INFO: [BIND 205-100] Finished micro-architecture generation.
-INFO: [HLS 200-111] Finished Binding: CPU user time: 0.22 seconds. CPU system time: 0 seconds. Elapsed time: 0.22 seconds; current allocated memory: 799.609 MB.
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [HLS 200-42] -- Implementing module 'DASTrial1' 
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [SCHED 204-11] Starting scheduling ...
-INFO: [SCHED 204-11] Finished scheduling.
-INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.31 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.31 seconds; current allocated memory: 799.871 MB.
-INFO: [BIND 205-100] Starting micro-architecture generation ...
-INFO: [BIND 205-101] Performing variable lifetime analysis.
-INFO: [BIND 205-101] Exploring resource sharing.
-INFO: [BIND 205-101] Binding ...
-INFO: [BIND 205-100] Finished micro-architecture generation.
-INFO: [HLS 200-111] Finished Binding: CPU user time: 0.42 seconds. CPU system time: 0 seconds. Elapsed time: 0.43 seconds; current allocated memory: 799.871 MB.
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [HLS 200-10] -- Generating RTL for module 'sin_or_cos_double_s' 
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [HLS 200-1030] Apply Unified Pipeline Control on module 'sin_or_cos_double_s' pipeline 'sin_or_cos<double>' pipeline type 'function pipeline'
-INFO: [RTGEN 206-100] Generating core module 'mul_170s_53ns_170_5_1': 1 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'mul_35ns_25ns_60_1_1': 1 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'mul_42ns_33ns_75_2_1': 1 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'mul_49ns_44s_93_2_1': 1 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'mul_49ns_49ns_98_2_1': 3 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'mul_56ns_52s_108_2_1': 1 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'mul_64s_63ns_126_5_1': 1 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'mux_164_1_1_1': 2 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'mux_83_1_1_1': 1 instance(s).
-INFO: [RTGEN 206-100] Finished creating RTL model for 'sin_or_cos_double_s'.
-INFO: [RTMG 210-279] Implementing memory 'DASTrial1_sin_or_cos_double_s_ref_4oPi_table_256_V_ROM_AUTO_1R' using auto ROMs.
-INFO: [RTMG 210-279] Implementing memory 'DASTrial1_sin_or_cos_double_s_fourth_order_double_sin_cos_K0_V_ROM_1P_LUTRAM_1R' using distributed ROMs.
-INFO: [RTMG 210-279] Implementing memory 'DASTrial1_sin_or_cos_double_s_fourth_order_double_sin_cos_K1_V_ROM_1P_LUTRAM_1R' using distributed ROMs.
-INFO: [RTMG 210-279] Implementing memory 'DASTrial1_sin_or_cos_double_s_fourth_order_double_sin_cos_K2_V_ROM_1P_LUTRAM_1R' using distributed ROMs.
-INFO: [RTMG 210-279] Implementing memory 'DASTrial1_sin_or_cos_double_s_fourth_order_double_sin_cos_K3_V_ROM_1P_LUTRAM_1R' using distributed ROMs.
-INFO: [RTMG 210-279] Implementing memory 'DASTrial1_sin_or_cos_double_s_fourth_order_double_sin_cos_K4_V_ROM_1P_LUTRAM_1R' using distributed ROMs.
-INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 0.67 seconds. CPU system time: 0 seconds. Elapsed time: 0.69 seconds; current allocated memory: 801.828 MB.
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [HLS 200-10] -- Generating RTL for module 'DASTrial1_Pipeline_VITIS_LOOP_27_1' 
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [HLS 200-1030] Apply Unified Pipeline Control on module 'DASTrial1_Pipeline_VITIS_LOOP_27_1' pipeline 'VITIS_LOOP_27_1' pipeline type 'loop pipeline'
-INFO: [RTGEN 206-100] Generating core module 'ddiv_64ns_64ns_64_31_no_dsp_1': 1 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'dmul_64ns_64ns_64_6_max_dsp_1': 2 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'sitodp_32s_64_4_no_dsp_1': 1 instance(s).
-INFO: [RTGEN 206-100] Finished creating RTL model for 'DASTrial1_Pipeline_VITIS_LOOP_27_1'.
-INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 1.21 seconds. CPU system time: 0.02 seconds. Elapsed time: 1.23 seconds; current allocated memory: 806.719 MB.
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [HLS 200-10] -- Generating RTL for module 'DASTrial1_Pipeline_VITIS_LOOP_41_3_VITIS_LOOP_44_4' 
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [HLS 200-1030] Apply Unified Pipeline Control on module 'DASTrial1_Pipeline_VITIS_LOOP_41_3_VITIS_LOOP_44_4' pipeline 'VITIS_LOOP_41_3_VITIS_LOOP_44_4' pipeline type 'loop pipeline'
-INFO: [RTGEN 206-100] Generating core module 'dadd_64ns_64ns_64_5_full_dsp_1': 2 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'dmul_64ns_64ns_64_6_max_dsp_1': 1 instance(s).
-INFO: [RTGEN 206-100] Finished creating RTL model for 'DASTrial1_Pipeline_VITIS_LOOP_41_3_VITIS_LOOP_44_4'.
-INFO: [RTMG 210-279] Implementing memory 'DASTrial1_DASTrial1_Pipeline_VITIS_LOOP_41_3_VITIS_LOOP_44_4_mask_table_ROM_AUTO_1R' using auto ROMs.
-INFO: [RTMG 210-279] Implementing memory 'DASTrial1_DASTrial1_Pipeline_VITIS_LOOP_41_3_VITIS_LOOP_44_4_one_half_table_ROM_AUTO_1R' using auto ROMs.
-INFO: [RTMG 210-279] Implementing memory 'DASTrial1_DASTrial1_Pipeline_VITIS_LOOP_41_3_VITIS_LOOP_44_4_weights_ROM_AUTO_1R' using auto ROMs.
-INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 0.58 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.6 seconds; current allocated memory: 808.844 MB.
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [HLS 200-10] -- Generating RTL for module 'DASTrial1' 
-INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [RTGEN 206-500] Setting interface mode on port 'DASTrial1/signal_r' to 'ap_none'.
-INFO: [RTGEN 206-500] Setting interface mode on port 'DASTrial1/signalLength' to 'ap_none'.
-INFO: [RTGEN 206-500] Setting interface mode on port 'DASTrial1/delayAngle' to 'ap_none'.
-INFO: [RTGEN 206-500] Setting interface mode on function 'DASTrial1' to 'ap_ctrl_hs'.
-INFO: [RTGEN 206-100] Generating core module 'ddiv_64ns_64ns_64_31_no_dsp_1': 1 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'dmul_64ns_64ns_64_6_max_dsp_1': 1 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'sitodp_32ns_64_4_no_dsp_1': 1 instance(s).
-INFO: [RTGEN 206-100] Finished creating RTL model for 'DASTrial1'.
-INFO: [RTMG 210-278] Implementing memory 'DASTrial1_delayTimes_RAM_AUTO_1R1W' using auto RAMs.
-INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 0.55 seconds. CPU system time: 0.02 seconds. Elapsed time: 0.57 seconds; current allocated memory: 811.633 MB.
-INFO: [HLS 200-111] Finished Generating all RTL models: CPU user time: 1.16 seconds. CPU system time: 0.03 seconds. Elapsed time: 1.2 seconds; current allocated memory: 815.422 MB.
-INFO: [HLS 200-111] Finished Updating report files: CPU user time: 0.37 seconds. CPU system time: 0.03 seconds. Elapsed time: 0.4 seconds; current allocated memory: 822.273 MB.
-INFO: [VHDL 208-304] Generating VHDL RTL for DASTrial1.
-INFO: [VLOG 209-307] Generating Verilog RTL for DASTrial1.
-INFO: [HLS 200-790] **** Loop Constraint Status: All loop constraints were NOT satisfied.
-INFO: [HLS 200-789] **** Estimated Fmax: 137.60 MHz
-INFO: [HLS 200-111] Finished Command csynth_design CPU user time: 27.62 seconds. CPU system time: 1.72 seconds. Elapsed time: 29.39 seconds; current allocated memory: 617.562 MB.
-INFO: [HLS 200-112] Total CPU user time: 29.46 seconds. Total CPU system time: 1.95 seconds. Total elapsed time: 41.24 seconds; peak allocated memory: 822.738 MB.
+INFO: [HLS 200-1510] Running: cosim_design 
+Running Dispatch Server on port: 36647
+WARNING: [HLS 200-626] This design is unable to schedule all read ports in the first II cycle. The RTL testbench may treat the design as non-pipelined
+INFO: [COSIM 212-47] Using XSIM for RTL simulation.
+INFO: [COSIM 212-14] Instrumenting C test bench ...
+   Build using "/opt/Xilinx/Vitis_HLS/2022.2/tps/lnx64/gcc-8.3.0/bin/g++"
+   Compiling apatb_DASTrial1.cpp
+   Compiling DASTrial1_test.cpp_pre.cpp.tb.cpp
+   Compiling DASTrial1.cpp_pre.cpp.tb.cpp
+   Compiling apatb_DASTrial1_ir.ll
+   Generating cosim.tv.exe
+INFO: [COSIM 212-302] Starting C TB testing ... 
+ERROR: System received a signal named SIGSEGV and the program has to stop immediately!
+This signal was generated when a program tries to read or write outside the memory that is allocated for it, or to write memory that can only be read.
+Possible cause of this problem may be:
+  1) Missing depth information for one or more pointers to arrays in the interface;
+  2) Insufficient depth setting for array argument(s);
+  3) Excessive depth setting for array argument(s), that exceeds the maximum virtual memory size for the process;
+  4) Null pointer etc.
+Current execution stopped during CodeState = DUMP_OUTPUTS.
+You can search CodeState variable name in apatb*.cpp file under ./sim/wrapc dir to locate the position.
+
+ERROR: [COSIM 212-360] Aborting co-simulation: C TB simulation failed.
+ERROR: [COSIM 212-320] C TB testing failed, stop generating test vectors. Please check C TB or re-run cosim.
+ERROR: [COSIM 212-5] *** C/RTL co-simulation file generation failed. ***
+ERROR: [COSIM 212-4] *** C/RTL co-simulation finished: FAIL ***
+INFO: [HLS 200-111] Finished Command cosim_design CPU user time: 5.3 seconds. CPU system time: 0.6 seconds. Elapsed time: 6.27 seconds; current allocated memory: 5.879 MB.
+command 'ap_source' returned error code
+    while executing
+"source /home/dian/ModelComposer/MyProject/HLS_Trials/Trial1/DASTrial1_prj/solution1/cosim.tcl"
+    invoked from within
+"hls::main /home/dian/ModelComposer/MyProject/HLS_Trials/Trial1/DASTrial1_prj/solution1/cosim.tcl"
+    ("uplevel" body line 1)
+    invoked from within
+"uplevel 1 hls::main {*}$newargs"
+    (procedure "hls_proc" line 16)
+    invoked from within
+"hls_proc [info nameofexecutable] $argv"
+INFO: [HLS 200-112] Total CPU user time: 7.17 seconds. Total CPU system time: 0.8 seconds. Total elapsed time: 18.15 seconds; peak allocated memory: 211.027 MB.

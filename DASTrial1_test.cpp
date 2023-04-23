@@ -59,8 +59,8 @@ using namespace std;
 #define WINDOW_FN_DEBUG 1
 
 // 延迟时间计算函数
-double computeDelayTime1(int elementIndex, double delayAngle) {
-    double delayTime = ((elementIndex - 1) * ELEMENTSPACING / SPEEDOFSOUND) * sin(delayAngle);
+double computeDelayTime1(int elementIndex, double azimuthAngle, double elevationAngle) {
+    double delayTime = ((elementIndex) * ELEMENTSPACING / SPEEDOFSOUND) * sin(azimuthAngle)* cos(elevationAngle);
     return delayTime;
 }
 
@@ -86,26 +86,23 @@ void addNoise(double* signal, int length, double variance) {
 }
 
 // Delay and Sum Beamformer 函数
-double beamform(double* signal, int signalLength, double delayAngle) {
+void beamform(double* signal, int signalLength, double azimuthAngle, double elevationAngle, double* output) {
     double* weights = new double[NUMELEMENTS];
     double delayTimes[NUMELEMENTS];
 
-
-
     // 计算各元素的延迟时间
     for (int i = 0; i < NUMELEMENTS; i++) {
-        delayTimes[i] = computeDelayTime1(i, delayAngle);
-    std::cout << delayTimes[i]  << " ";
+        delayTimes[i] = computeDelayTime1(i, azimuthAngle, elevationAngle);
+    //std::cout << delayTimes[i]  << " ";
 }
-std::cout << std::endl;
+//std::cout << std::endl;
 
     // 计算各元素的权值
     for (int i = 0; i < NUMELEMENTS; i++) {
         weights[i] = 1.0 / NUMELEMENTS;
-    std::cout << weights[i] << " ";
+    //std::cout << weights[i] << " ";
 }
-std::cout << std::endl;
-
+//std::cout << std::endl;
 
     double sum = 0.0;
     for (int i = 0; i < signalLength; i++) {
@@ -119,13 +116,9 @@ std::cout << std::endl;
                 arraySignal += weights[j] * signal[signalIndex];
             }
         }
-        sum += arraySignal;
+        output[i] = arraySignal;
     }
-
     delete[] weights;
-
-    return sum / signalLength;
-
 }
 
 int main(int argc, char *argv[])
@@ -136,32 +129,29 @@ int main(int argc, char *argv[])
 	double arrayLength = ARRAYLENGTH;
 	int numElements = NUMELEMENTS;
 	double elementSpacing = ELEMENTSPACING;
-	double signalAngle = SIGNALANGLE;
+	double azimuthAngle = SIGNALANGLE;
+	double elevationAngle = 0;
 	double noiseVariance = NOISEVARIANCE;
-   int signalLength = 48000;
-
-   double hw_result[ILENGTH], sw_result[ILENGTH]; // HLS输出；软件输出
-   int i;
-   unsigned err_cnt = 0, check_dots = 0;
-   FILE        *fp;
+	int signalLength = SIGNALLENGTH;
+	double hw_result[SIGNALLENGTH], sw_result[SIGNALLENGTH]; // HLS输出；软件输出
+	int i;
+	unsigned err_cnt = 0, check_dots = 0;
+	FILE        *fp;
 
 
     double* signal = generateSignal(signalLength, CENTERFREQ, MYSAMPLERATE);
 
-    // 添加噪声
-    addNoise(signal, signalLength, NOISEVARIANCE);
+
 
     // 计算 Delay and Sum Beamformer 结果
 
-
-    for (unsigned i = 0; i < ILENGTH; i++) {
-    sw_result[i] = beamform(signal, signalLength, SIGNALANGLE);
-    }
-
+    beamform(signal, signalLength, azimuthAngle, elevationAngle, sw_result);
+    // 添加噪声
+    addNoise(signal, signalLength, NOISEVARIANCE);
    ////////////////////////////////// 测试HLS程序 //////////////////////////////////
-   for (unsigned i = 0; i < ILENGTH; i++) {
-	   hw_result[i] = add(signal, signalLength, SIGNALANGLE);
-   }
+   //for (unsigned i = 0; i < SIGNALLENGTH; i++) {
+    DASTrial1(signal, signalLength, azimuthAngle, elevationAngle, hw_result);
+   //}
 
    ////////////////////////////////// 比对+写下结果 //////////////////////////////////
 
@@ -169,7 +159,7 @@ int main(int argc, char *argv[])
    // Check results
     cout << "Checking results against a tolerance of " << ABS_ERR_THRESH << endl;
     cout << fixed << setprecision(5);
-   for (unsigned i = 0; i < ILENGTH; i++) {
+   for (unsigned i = 0; i < SIGNALLENGTH; i++) {
       float abs_err = float(hw_result[i]) - sw_result[i];
 #if WINDOW_FN_DEBUG
       cout << "i = " << i << "\thw_result = " << hw_result[i];
