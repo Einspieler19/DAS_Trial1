@@ -43,37 +43,68 @@ THIS COPYRIGHT NOTICE AND DISCLAIMER MUST BE RETAINED AS PART OF THIS FILE AT
 ALL TIMES.
 
 *******************************************************************************/
-#ifndef DAS_H
-#define DAS_H
+#ifndef TEMPLATE_H
+#define TEMPLATE_H
+
+#include "DASTrial1.h"
 
 
-#include <iostream>
-#include <iomanip> 
-#include <fstream>
-#include <cmath>
-#include <ctime>
-#include <cstdlib>
-#include "constants.h"
-#include <ap_int.h> // Xilinx hls的整型库
-#include <ap_fixed.h>
-#include "hls_math.h"
+template<typename type_angle, typename type_dout>
+type_dout CalculateSin(type_angle angle)
+{
+    type_dout output = hls::sinf(angle);
+    return output;
+}
+
+template<typename type_angle, typename type_dout>
+type_dout CalculateCos(type_angle angle)
+{
+    type_dout output = hls::cosf(angle);
+    return output;
+}
 
 
-using namespace std;
 
-#define FLOAT_DATA // Used to select error tolerance in test program
+template<typename din_fix, typename d_int_index, typename din_angle>
+class DelayCalculator {
+public:
+    din_fix computeDelayTime(d_int_index elementIndex, din_angle azimuthAngle, din_angle elevationAngle) {
+        din_fix sinAzimuthangle = CalculateSin(azimuthAngle);
+        din_fix cosElevationangle = CalculateCos(elevationAngle);
+        din_fix delayTime = ((din_fix)((elementIndex) * ELEMENTSPACING / SPEEDOFSOUND)) * sinAzimuthangle * cosElevationangle;
+        return delayTime;
+    }
 
-#define W_IN    48
-#define IW_IN   24
+private:
+    din_fix CalculateSin(din_angle angle) {
+        din_fix functionInput = angle;
+        din_fix output = hls::sinf(functionInput);
+        return output;
+    }
 
-typedef ap_uint<16> d_int_index;
-typedef ap_int<16> d_int;
-typedef ap_fixed<W_IN,IW_IN> din_angle;
-typedef ap_fixed<W_IN,IW_IN> din_fix;
-typedef ap_fixed<W_IN,IW_IN> d_fix;
+    din_fix CalculateCos(din_angle angle) {
+        din_fix functionInput = angle;
+        din_fix output = hls::cosf(functionInput);
+        return output;
+    }
 
 
-d_fix DASTrial1(d_fix signal[SIGNALLENGTH], d_int signalLength, din_angle azimuthAngle, din_angle elevationAngle, d_int_index snapshotIndex);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #endif
