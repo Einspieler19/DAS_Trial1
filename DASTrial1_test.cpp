@@ -9,7 +9,7 @@ Revision History: March 1, 2013 - initial release
 Copyright (C) 2020 XILINX, Inc. 
 
 This file contains confidential and proprietary information of Xilinx, Inc. and 
-is protected under U.S. and international copyright and other intellectual 
+is protected under U.S. and d_international copyright and other d_intellectual
 property laws.
 
 DISCLAIMER
@@ -29,7 +29,7 @@ action brought by a third party) even if such damage or loss was reasonably
 foreseeable or Xilinx had been advised of the possibility of the same.
 
 CRITICAL APPLICATIONS
-Xilinx products are not designed or intended to be fail-safe, or for use in any 
+Xilinx products are not designed or d_intended to be fail-safe, or for use in any
 application requiring fail-safe performance, such as life-support or safety 
 devices or systems, Class III medical devices, nuclear facilities, applications 
 related to the deployment of airbags, or any other applications that could lead 
@@ -45,6 +45,7 @@ ALL TIMES.
 *******************************************************************************/
 #include <iostream>
 #include "DASTrial1.h"
+#include "Template.h"
 using namespace std;
 
 ////////////////////////// 确定对比精度 //////////////////////////
@@ -58,72 +59,86 @@ using namespace std;
 ////////////////////////// 是否输出对比数据 //////////////////////////
 #define WINDOW_FN_DEBUG 1
 
+d_fix Calculate_multiply(d_fix a, d_fix b, d_fix c)
+{
+	d_fix d = a*b*c;
+	return d;
+}
+
+
 // 延迟时间计算函数
-double computeDelayTime1(int elementIndex, double azimuthAngle, double elevationAngle) {
-    double delayTime = ((elementIndex) * ELEMENTSPACING / SPEEDOFSOUND) * sin(azimuthAngle)* cos(elevationAngle);
-    return delayTime;
+din_fix computeDelayTime1(d_int_index elementIndex, din_angle azimuthAngle, din_angle elevationAngle) {
+	d_fix sinAzimuthangle = CalculateSin<d_fix,d_fix>(azimuthAngle);
+	d_fix cosElevationangle = CalculateCos<d_fix,d_fix>(elevationAngle);
+	d_fix delayTime = Calculate_multiply(((d_fix)((elementIndex) * ELEMENTSPACING / SPEEDOFSOUND)), sinAzimuthangle,cosElevationangle);
+	return delayTime;
 }
 
 
 // 生成信号函数
-double* generateSignal(double signal[SIGNALLENGTH], int length, double centerFreq, double sampleRate) {
-    for (int i = 0; i < length; i++) {
-        signal[i] = 100*sin(2 * PI * centerFreq * i / sampleRate);
-    }
+d_fix* generateSignal(d_fix signal[SIGNALLENGTH], d_int length, d_fix centerFreq, d_fix sampleRate) {
+    for (d_int i = 0; i < length; i++) {
+    	d_fix sinSignal = CalculateSin<d_fix,d_fix>((din_angle)(2 * PI  * i) * centerFreq/ sampleRate);
+        signal[i] = sinSignal;
+    	}
     return signal;
 }
 
 // 添加噪声函数
-void addNoise(double* signal, int length, double variance) {
+void addNoise(d_fix* signal, d_int length, d_fix variance) {
     // 设置随机数种子
     srand((unsigned)time(NULL));
-    double randNum;
+    d_fix randNum;
     ofstream FILE;
 
     // Save the results to a file
     FILE.open ("result_noised.dat");
-    for (int i = 0; i < length; i++) {
-    	randNum = (double)rand() / RAND_MAX-0.5;
-        signal[i] += sqrt(variance) * randNum;
+    for (d_int i = 0; i < length; i++) {
+    	randNum = (d_fix)(rand() / RAND_MAX-0.5);
+        signal[i] += (d_fix)hls::sqrt(variance) * randNum;
         FILE << signal[i] << endl;
     }
     FILE.close();
 }
 
 // Delay and Sum Beamformer 函数
-void beamform(double* signal, int signalLength, double azimuthAngle, double elevationAngle, double* output) {
-    double* weights = new double[NUMELEMENTS];
-    double delayTimes[NUMELEMENTS];
+void beamform(d_fix* signal, d_int signalLength, din_angle azimuthAngle, din_angle elevationAngle, d_fix* output) {
+    d_fix* weights = new d_fix[NUMELEMENTS];
+    d_fix delayTimes[NUMELEMENTS];
 
     // 计算各元素的延迟时间
-    for (int i = 0; i < NUMELEMENTS; i++) {
+    for (d_int i = 0; i < NUMELEMENTS; i++) {
         delayTimes[i] = computeDelayTime1(i, azimuthAngle, elevationAngle);
-    //std::cout << delayTimes[i]  << " ";
+    std::cout << delayTimes[i]  << " ";
 }
-//std::cout << std::endl;
+std::cout << std::endl;
 
     // 计算各元素的权值
-    for (int i = 0; i < NUMELEMENTS; i++) {
+    for (d_int i = 0; i < NUMELEMENTS; i++) {
         weights[i] = 1.0 / NUMELEMENTS;
-    //std::cout << weights[i] << " ";
+    std::cout << weights[i] << " ";
 }
-//std::cout << std::endl;
+std::cout << std::endl;
     ofstream FILE;
 
     // Save the results to a file
     FILE.open ("result_formed.dat");
 
-    double sum = 0.0;
-    for (int i = 0; i < signalLength; i++) {
-        double signalValue = signal[i];
-        double arraySignal = 0.0;
-        for (int j = 0; j < NUMELEMENTS; j++) {
-            double elementDelay = delayTimes[j];
-            int delaySamples = (int)round(elementDelay * MYSAMPLERATE);
-            int signalIndex = i - delaySamples;
+    d_fix sum = 0.0;
+    for (d_int i = 0; i < signalLength; i++) {
+        d_fix signalValue = signal[i];
+        d_fix arraySignal = 0.0;
+        for (d_int j = 0; j < NUMELEMENTS; j++) {
+            d_fix elementDelay = delayTimes[j];
+            d_int delaySamples = (d_int)hls::round(elementDelay * MYSAMPLERATE);
+
+            d_int signalIndex = i - delaySamples;
+            //cout<< signalIndex << endl;
             if (signalIndex >= 0 && signalIndex < signalLength) {
                 arraySignal += weights[j] * signal[signalIndex];
-            }
+                cout<< weights[j] << " "<< endl;
+                cout<< signal[signalIndex] <<" "<< endl;
+                }
         }
         output[i] = arraySignal;
         FILE << output[i] << endl;
@@ -134,30 +149,30 @@ void beamform(double* signal, int signalLength, double azimuthAngle, double elev
 
 int main(int argc, char *argv[])
 {
-	double sampleRate = MYSAMPLERATE;
-	double speedOfSound = SPEEDOFSOUND;
-	double centerFreq = CENTERFREQ;
-	double arrayLength = ARRAYLENGTH;
-	int numElements = NUMELEMENTS;
-	double elementSpacing = ELEMENTSPACING;
-	double azimuthAngle = SIGNALANGLE;
-	double elevationAngle = 0;
-	double noiseVariance = NOISEVARIANCE;
-	int signalLength = SIGNALLENGTH;
-	double hw_result[SIGNALLENGTH], sw_result[SIGNALLENGTH]; // HLS输出；软件输出
-	double signal[SIGNALLENGTH];
-	int i;
+	d_fix sampleRate = MYSAMPLERATE;
+	d_fix speedOfSound = SPEEDOFSOUND;
+	d_fix centerFreq = CENTERFREQ;
+	d_fix arrayLength = ARRAYLENGTH;
+	d_int numElements = NUMELEMENTS;
+	d_fix elementSpacing = ELEMENTSPACING;
+	d_fix azimuthAngle = SIGNALANGLE;
+	d_fix elevationAngle = 0;
+	d_fix noiseVariance = NOISEVARIANCE;
+	d_int signalLength = SIGNALLENGTH;
+	d_fix hw_result[SIGNALLENGTH], sw_result[SIGNALLENGTH]; // HLS输出；软件输出
+	d_fix signal[SIGNALLENGTH];
+	d_int i;
 	unsigned err_cnt = 0, check_dots = 0;
 	FILE        *fp;
 
 
-    double * signalPointer = generateSignal(signal, signalLength, CENTERFREQ, MYSAMPLERATE);
+    d_fix * signalPod_inter = generateSignal(signal, signalLength, CENTERFREQ, MYSAMPLERATE);
 
-    addNoise(signalPointer, signalLength, NOISEVARIANCE);
+    addNoise(signalPod_inter, signalLength, NOISEVARIANCE);
 
     // 计算 Delay and Sum Beamformer 结果
 
-    beamform(signalPointer, signalLength, azimuthAngle, elevationAngle, sw_result);
+    beamform(signalPod_inter, signalLength, azimuthAngle, elevationAngle, sw_result);
     // 添加噪声
 
    ////////////////////////////////// 测试HLS程序 //////////////////////////////////
@@ -171,7 +186,7 @@ int main(int argc, char *argv[])
     cout << "Checking results against a tolerance of " << ABS_ERR_THRESH << endl;
     cout << fixed << setprecision(5);
    for (unsigned i = 0; i < SIGNALLENGTH; i++) {
-      float abs_err = float(hw_result[i]) - sw_result[i];
+      float abs_err = float(hw_result[i] - sw_result[i]);
 #if WINDOW_FN_DEBUG
       cout << "i = " << i << "\thw_result = " << hw_result[i];
       cout << "\t sw_result = " << sw_result[i] << endl;
