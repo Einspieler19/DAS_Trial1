@@ -49,7 +49,7 @@ using namespace std;
 
 ////////////////////////// 确定对比精度 //////////////////////////
 #ifdef FLOAT_DATA
-#define ABS_ERR_THRESH 0.01
+#define ABS_ERR_THRESH 0.1
 #else
 #define ABS_ERR_THRESH 0.001
 #endif
@@ -65,12 +65,10 @@ double computeDelayTime1(int elementIndex, double azimuthAngle, double elevation
 }
 
 
-
 // 生成信号函数
-double* generateSignal(int length, double centerFreq, double sampleRate) {
-    double* signal = new double[length];
+double* generateSignal(double signal[SIGNALLENGTH], int length, double centerFreq, double sampleRate) {
     for (int i = 0; i < length; i++) {
-        signal[i] = sin(2 * PI * centerFreq * i / sampleRate);
+        signal[i] = 100*sin(2 * PI * centerFreq * i / sampleRate);
     }
     return signal;
 }
@@ -79,10 +77,17 @@ double* generateSignal(int length, double centerFreq, double sampleRate) {
 void addNoise(double* signal, int length, double variance) {
     // 设置随机数种子
     srand((unsigned)time(NULL));
+    double randNum;
+    ofstream FILE;
 
+    // Save the results to a file
+    FILE.open ("result_noised.dat");
     for (int i = 0; i < length; i++) {
-        signal[i] += sqrt(variance) * (double)rand() / RAND_MAX;
+    	randNum = (double)rand() / RAND_MAX-0.5;
+        signal[i] += sqrt(variance) * randNum;
+        FILE << signal[i] << endl;
     }
+    FILE.close();
 }
 
 // Delay and Sum Beamformer 函数
@@ -103,6 +108,10 @@ void beamform(double* signal, int signalLength, double azimuthAngle, double elev
     //std::cout << weights[i] << " ";
 }
 //std::cout << std::endl;
+    ofstream FILE;
+
+    // Save the results to a file
+    FILE.open ("result_formed.dat");
 
     double sum = 0.0;
     for (int i = 0; i < signalLength; i++) {
@@ -117,8 +126,10 @@ void beamform(double* signal, int signalLength, double azimuthAngle, double elev
             }
         }
         output[i] = arraySignal;
+        FILE << output[i] << endl;
     }
     delete[] weights;
+    FILE.close();
 }
 
 int main(int argc, char *argv[])
@@ -134,27 +145,27 @@ int main(int argc, char *argv[])
 	double noiseVariance = NOISEVARIANCE;
 	int signalLength = SIGNALLENGTH;
 	double hw_result[SIGNALLENGTH], sw_result[SIGNALLENGTH]; // HLS输出；软件输出
+	double signal[SIGNALLENGTH];
 	int i;
 	unsigned err_cnt = 0, check_dots = 0;
 	FILE        *fp;
 
 
-    double* signal = generateSignal(signalLength, CENTERFREQ, MYSAMPLERATE);
+    double * signalPointer = generateSignal(signal, signalLength, CENTERFREQ, MYSAMPLERATE);
 
-
+    addNoise(signalPointer, signalLength, NOISEVARIANCE);
 
     // 计算 Delay and Sum Beamformer 结果
 
-    beamform(signal, signalLength, azimuthAngle, elevationAngle, sw_result);
+    beamform(signalPointer, signalLength, azimuthAngle, elevationAngle, sw_result);
     // 添加噪声
-    addNoise(signal, signalLength, NOISEVARIANCE);
+
    ////////////////////////////////// 测试HLS程序 //////////////////////////////////
-   //for (unsigned i = 0; i < SIGNALLENGTH; i++) {
-    DASTrial1(signal, signalLength, azimuthAngle, elevationAngle, hw_result);
-   //}
+   for (unsigned i = 0; i < SIGNALLENGTH; i++) {
+    hw_result[i] = DASTrial1(signal, signalLength, azimuthAngle, elevationAngle,i);
+   }
 
    ////////////////////////////////// 比对+写下结果 //////////////////////////////////
-
 
    // Check results
     cout << "Checking results against a tolerance of " << ABS_ERR_THRESH << endl;

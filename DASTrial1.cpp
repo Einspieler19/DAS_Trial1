@@ -38,7 +38,8 @@ double delay_Snapshots(double elementDelay) {
 }
 
 // 权值*信号
-double sum_Snapshot(double* weight, double* signal, int snapshotIndex, double* delayTimes) {
+double sum_Snapshot(double* weight, double signal[SIGNALLENGTH], int snapshotIndex, double* delayTimes) {
+	double summed = 0.0;
 	double summedSnapshot = 0.0;
 	int delayedSnapshotIndex = 0;
 	// 天线index和时间片index
@@ -46,46 +47,31 @@ double sum_Snapshot(double* weight, double* signal, int snapshotIndex, double* d
 	    delayedSnapshotIndex = snapshotIndex - delay_Snapshots(delayTimes[elementIndex]);
 	    if (delayedSnapshotIndex >= 0 && delayedSnapshotIndex < SIGNALLENGTH) {
                 //arraySignal += weights[j] * signal[signalIndex];
-                summedSnapshot += mul_WeightSnapshot(weight[elementIndex], signal[delayedSnapshotIndex]);
+                summed = mul_WeightSnapshot(weight[elementIndex], signal[delayedSnapshotIndex]);
+                summedSnapshot += summed;
             }
     }
     return summedSnapshot;
 }
 
-// 权值*信号
-void sum_Signal(double* weight, double* signal, double* delayTimes, double* summedSignal) {
+double DASTrial1(double signal[SIGNALLENGTH], int signalLength, double azimuthAngle, double elevationAngle, int snapshotIndex) {
 
-	double summedSignalAll = 0.0;
-    for (int snapshotIndex = 0; snapshotIndex < SIGNALLENGTH; snapshotIndex++) {
-	   summedSignal[snapshotIndex] = sum_Snapshot(weight, signal, snapshotIndex, delayTimes);
-	   //summedSignalAll += summedSignal[snapshotIndex];
+		double sampleRate = MYSAMPLERATE;
+		double speedOfSound = SPEEDOFSOUND;
+		double centerFreq = CENTERFREQ;
+		double arrayLength = ARRAYLENGTH;
+		int numElements = NUMELEMENTS;
+		double elementSpacing = ELEMENTSPACING;
+		//double azimuthAngle = SIGNALANGLE;
+		double noiseVariance = NOISEVARIANCE;
+
+	    double weights[NUMELEMENTS];
+	    double delayTimes[NUMELEMENTS];
+	    double summedSignal = 0.0;
+
+	    computeWeights(weights, numElements);
+	    computeDelayTimesVector(delayTimes, numElements, azimuthAngle, elevationAngle);
+	    summedSignal = sum_Snapshot(weights, signal, snapshotIndex, delayTimes);
+
+	    return summedSignal;
     }
-    //return summedSignalAll;
-}
-
-
-// Delay and Sum Beamformer 函数
-void DASTrial1(double* signal, int signalLength, double azimuthAngle, double elevationAngle, double *summedSignal) {
-
-	double sampleRate = MYSAMPLERATE;
-	double speedOfSound = SPEEDOFSOUND;
-	double centerFreq = CENTERFREQ;
-	double arrayLength = ARRAYLENGTH;
-	int numElements = NUMELEMENTS;
-	double elementSpacing = ELEMENTSPACING;
-	//double azimuthAngle = SIGNALANGLE;
-	double noiseVariance = NOISEVARIANCE;
-
-    double weights[NUMELEMENTS];
-    double delayTimes[NUMELEMENTS];
-
-    computeWeights(weights, numElements);
-    computeDelayTimesVector(delayTimes, numElements, azimuthAngle, elevationAngle);
-    sum_Signal(weights, signal, delayTimes, summedSignal);
-
-}
-
-
-
-
-

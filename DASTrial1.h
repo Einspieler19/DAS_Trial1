@@ -49,14 +49,18 @@ ALL TIMES.
 
 #include <iostream>
 #include <iomanip> 
+#include <fstream>
 #include <cmath>
 #include <ctime>
 #include <cstdlib>
 #include "constants.h"
 
+using namespace std;
+
+
 #define FLOAT_DATA // Used to select error tolerance in test program
 
-void DASTrial1(double* signal, int signalLength, double azimuthAngle, double elevationAngle, double *summedSignal);
+double DASTrial1(double signal[SIGNALLENGTH], int signalLength, double azimuthAngle, double elevationAngle, int snapshotIndex);
 
 
 #endif
