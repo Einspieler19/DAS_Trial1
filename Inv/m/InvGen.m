@@ -1,0 +1,78 @@
+% ///////////////////////////////////////////////////////////////////////////////
+% // Copyright (c) 2017 Xilinx, Inc.
+% // All Rights Reserved
+% ///////////////////////////////////////////////////////////////////////////////
+% //   ____  ____
+% //  /   /\/   /
+% // /___/  \  /    Vendor: Xilinx
+% // \   \   \/     Version: 1.0
+% //  \   \         Application : Vivado HLS
+% //  /   /         Filename: gettv_luinv.m
+% // /___/   /\     Timestamp: Fri Aug 19 8:08:10 PST 2016
+% // \   \  /  \
+% //  \___\/\___\
+% //
+% //Command: N/A
+% //Device:  N/A
+% //Design Name: LUInv
+% //Purpose:
+% //    Generate the test vectors for LU Matrix Inversion function
+% //Reference:
+% //    XAPP1317
+% ///////////////////////////////////////////////////////////////////////////////
+
+% Number of matrices
+N_test = 1;
+
+% Matrix Dimension
+NL = 32;
+
+
+% Dump DAT for ROM Generation
+DUMP_DAT = 0;
+
+% Range of data will be within (-N_rng, N_rng)
+N_Rng = 2^16;
+
+% Folder to save the test vectors
+TV_Folder = '../tv';
+TO_PLOT = 0;
+
+if exist(TV_Folder, 'dir')==0,
+	mkdir(TV_Folder);
+end
+
+% Open the files
+fname = sprintf('%s/Matrix_A.txt', TV_Folder);
+fida=fopen(fname, 'wt');
+
+
+fname = sprintf('%s/MInv_gold.txt', TV_Folder);
+fod=fopen(fname, 'wt');
+
+for k=1:N_test
+	%-------------- dump test vectors for RTL validation -------
+%     fprintf(fod, '%d\n',0);
+            H = randn(NL) + 1i*randn(NL);
+            A = H*H';
+            C = chol(A,'lower');
+            [L,D] = ldl(A);
+            
+            C = L;
+
+    for m=1:NL
+        for n=1:NL
+                     
+            fprintf(fida, '%.16e %.16e\n', real(A(m, n)), imag(A(m, n)));
+            fprintf(fod, '%.16e %.16e\n', real(C(m, n)), imag(C(m, n)));
+        end
+    end
+	
+end
+
+% close test vectors
+fclose(fida);
+% fclose(fidb);
+fclose(fod);
+
+
