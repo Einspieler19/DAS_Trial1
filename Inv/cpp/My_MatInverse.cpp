@@ -442,22 +442,24 @@ void Vitis_chol_Alt2(hls::stream<MInv_T>& matrixInStrm,
 
 
 
-
 void My_LDL(hls::stream<MInv_T>& matrixInStrm,
 		hls::stream<MInv_TOut>& matrixOutStrm){
 
 	MInv_T  L_internal[RowsColsA][RowsColsA];
 	MInv_T	D[RowsColsA];
 
-	MInv_T square_sum;
 	MInv_T product_sum;
 	PROD_T prod;
 	ACCUM_T sum[RowsColsA];
-	ACCUM_T A_cast_to_sum;    // A with the same dimensions as sum.
+	MInv_T0 A_cast_to_sum;    // A with the same dimensions as sum.
+	MInv_T0 A_minus_sum;
+
+
 	ACCUM_T prod_cast_to_sum; // prod with the same dimensions as sum.
 
-	ADD_T A_minus_sum;
+
 	MInv_T new_L_diag;         // sqrt(A_minus_sum)
+	MInv_T0 new_L_d;
 	OFF_DIAG_T new_L_off_diag; // sum/L
 	OFF_DIAG_T L_cast_to_new_L_off_diag;
 
@@ -482,10 +484,6 @@ void My_LDL(hls::stream<MInv_T>& matrixInStrm,
 	MInv_TOut L[RowsA][ColsB];
 
 
-void mymult_conj(MInv_T A, MInv_T0& B) {
-Function_conjugate_mult_complex:;
-    B = (A.real() * A.real()) - (A.imag() * A.imag());
-}
 
 
 
@@ -507,7 +505,7 @@ Function_conjugate_mult_complex:;
 	col_loop:
 	for (int j = 0; j < RowsColsA; j++) {
 		// 取到A对角元
-		A_cast_to_sum = A[j][j];
+		A_cast_to_sum = A[j][j].real();
 
 		// 完成减法
 		if (j == 0) {
@@ -518,41 +516,43 @@ Function_conjugate_mult_complex:;
 		// 顺便赋L对角：考虑放在哪里更好
 		L[j][j] = 1;
 
-		new_L = A_minus_sum;
-		
+		new_L_d = A_minus_sum;
+
 		//存对角元素
-		Diag[j] = new_L;
-		
+		Diag[j] = new_L_d;
+
 		// 存逆元素
-		new_L_diag_recip = 1/new_L.real();
+		new_L_diag_recip = 1/new_L_d;
 
 
 		sum_loop:
 		for (int k = 0; k <= j; k++) {
 #pragma HLS loop_tripcount max = (1 + (RowsColsA/2))
+//#pragma HLS DEPENDENCE dependent=false type=intra variable=product_sum_array
+//#pragma HLS DEPENDENCE dependent=false type=intra variable=square_sum_array
 
 			//预存 i * d
-			mymult_complex_real(-hls::x_conj(L_internal[j][k]),Diag[k],prod_column_top);
-
+//			mymult_complex_real(-hls::x_conj(L_internal[j][k]),Diag[k],prod_column_top);
+			prod_column_top = -hls::x_conj(L_internal[j][k]);
 			row_loop:
 			for (int i = 0; i < RowsColsA; i++) {
 				// 不要和sum loop合并，调度困难？
-				//#pragma HLS LOOP_FLATTEN off
-				
+				#pragma HLS LOOP_FLATTEN off
+
 				#pragma HLS PIPELINE II = 1
-				#pragma HLS UNROLL FACTOR = 1
+//				#pragma HLS UNROLL FACTOR = 1
 
 				if (i > j) {
 					prod = L_internal[i][k] * prod_column_top;
-
+					prod_cast_to_sum = prod;
 
 					// 遍历起始: 找到A元
 					if (k == 0) {
 						// Prime first sum
-						A_cast_to_sum = A[i][j];
-						product_sum = A_cast_to_sum;
-					} 
-					
+
+						product_sum = A[i][j];
+					}
+
 					// 遍历中途: 累加
 					else {
 						product_sum = product_sum_array[i];
@@ -560,9 +560,9 @@ Function_conjugate_mult_complex:;
 
 					if (k < j) {
 						// 遍历中途: 累加
-						product_sum_array[i] = product_sum + prod;
+						product_sum_array[i] = product_sum + prod_cast_to_sum;
 
-					} 
+					}
 					// 遍历结束: 累加
 					else {
 
@@ -578,23 +578,24 @@ Function_conjugate_mult_complex:;
 
 
 						// 存储 i*d*i
-						mymult_conj(new_L, square_sum);
-						square_sum_array[i] += square_sum* Diag[k];
-//						
+//						mymult_conj(new_L, square_sum);
+						square_sum = square_sum* Diag[k];
+//
+						square_sum_array[i] += square_sum;
 						// off元素最终赋值
 						L_internal[i][j] = new_L;
 						// 另起置0循环
 						// o 提高II，DSP要求多
 						// o 置0留在这里的话最多II=2
-						
-						L[i][j] = new_L;       
+
+						L[i][j] = new_L;
 						if (!ARCH2_ZERO_LOOP) L[j][i] = 0; // Zero upper
 					}
 				}
 			}
 		}
 	}
-	
+
 	// Zero upper/lower triangle
 	// o 单拎达到 II=1
 	// o DSP 增多
@@ -621,9 +622,6 @@ Function_conjugate_mult_complex:;
 
 	}
 }
-
-
-
 
 
 
