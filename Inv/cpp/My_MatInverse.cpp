@@ -368,7 +368,7 @@ void Vitis_chol_Alt2(hls::stream<MInv_T>& matrixInStrm,
 			for (int i = 0; i < RowsColsA; i++) {
 				// IMPORTANT: row_loop must not merge with sum_loop as the merged loop becomes variable length and HLS will struggle
 				// with scheduling
-				//#pragma HLS LOOP_FLATTEN off
+				#pragma HLS LOOP_FLATTEN off
 #pragma HLS PIPELINE II = 5
 				//#pragma HLS UNROLL FACTOR = UNROLL_FACTOR
 
@@ -438,7 +438,6 @@ void Vitis_chol_Alt2(hls::stream<MInv_T>& matrixInStrm,
 
 	}
 }
-
 
 
 
@@ -532,15 +531,15 @@ void My_LDL(hls::stream<MInv_T>& matrixInStrm,
 //#pragma HLS DEPENDENCE dependent=false type=intra variable=square_sum_array
 
 			//预存 i * d
-//			mymult_complex_real(-hls::x_conj(L_internal[j][k]),Diag[k],prod_column_top);
-			prod_column_top = -hls::x_conj(L_internal[j][k]);
+			mymult_complex_real(-hls::x_conj(L_internal[j][k]),Diag[k],prod_column_top);
+//			prod_column_top = -hls::x_conj(L_internal[j][k]);
 			row_loop:
 			for (int i = 0; i < RowsColsA; i++) {
 				// 不要和sum loop合并，调度困难？
 				#pragma HLS LOOP_FLATTEN off
 
 				#pragma HLS PIPELINE II = 1
-//				#pragma HLS UNROLL FACTOR = 1
+				#pragma HLS UNROLL FACTOR = 16
 
 				if (i > j) {
 					prod = L_internal[i][k] * prod_column_top;
@@ -578,7 +577,7 @@ void My_LDL(hls::stream<MInv_T>& matrixInStrm,
 
 
 						// 存储 i*d*i
-//						mymult_conj(new_L, square_sum);
+						mymult_conj(new_L, square_sum);
 						square_sum = square_sum* Diag[k];
 //
 						square_sum_array[i] += square_sum;
@@ -622,6 +621,5 @@ void My_LDL(hls::stream<MInv_T>& matrixInStrm,
 
 	}
 }
-
 
 
