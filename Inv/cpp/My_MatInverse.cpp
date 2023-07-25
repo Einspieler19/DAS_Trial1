@@ -442,11 +442,11 @@ void Vitis_chol_Alt2(hls::stream<MInv_T>& matrixInStrm,
 
 
 
+
 void My_LDL(hls::stream<MInv_T>& matrixInStrm,
 		hls::stream<MInv_TOut>& matrixOutStrm){
 
 	MInv_T  L_internal[RowsColsA][RowsColsA];
-	MInv_T  retrieved_L;
 	MInv_T	D[RowsColsA];
 
 	MInv_T square_sum;
@@ -461,7 +461,8 @@ void My_LDL(hls::stream<MInv_T>& matrixInStrm,
 	OFF_DIAG_T new_L_off_diag; // sum/L
 	OFF_DIAG_T L_cast_to_new_L_off_diag;
 
-	MInv_T square_sum_array[RowsColsA];
+	MInv_T0 square_sum_array[RowsColsA];
+	MInv_T0 square_sum;
 	MInv_TOut new_L;
 
 	MInv_T0 diag_internal[RowsColsA];
@@ -476,10 +477,15 @@ void My_LDL(hls::stream<MInv_T>& matrixInStrm,
 
 	//	MInv_T temp=0;
 	MInv_TOut Sum[ColsA];
-	MInv_TOut Diag[ColsA];
+	MInv_T0 Diag[ColsA];
 	MInv_T A[RowsA][ColsA];
 	MInv_TOut L[RowsA][ColsB];
 
+
+void mymult_conj(MInv_T A, MInv_T0& B) {
+Function_conjugate_mult_complex:;
+    B = (A.real() * A.real()) - (A.imag() * A.imag());
+}
 
 
 
@@ -496,25 +502,28 @@ void My_LDL(hls::stream<MInv_T>& matrixInStrm,
 		product_sum_array[i]=0;
 	}
 
+
+
 	col_loop:
 	for (int j = 0; j < RowsColsA; j++) {
-		// Diagonal calculation
+		// 取到A对角元
 		A_cast_to_sum = A[j][j];
 
+		// 完成减法
 		if (j == 0) {
 			A_minus_sum = A_cast_to_sum;
 		} else {
 			A_minus_sum = A_cast_to_sum - square_sum_array[j];
 		}
-
+		// 顺便赋L对角：考虑放在哪里更好
 		L[j][j] = 1;
 
 		new_L = A_minus_sum;
-//		std::cout<<new_L<<std::endl;
-
+		
+		//存对角元素
 		Diag[j] = new_L;
-
-
+		
+		// 存逆元素
 		new_L_diag_recip = 1/new_L.real();
 
 
@@ -522,85 +531,80 @@ void My_LDL(hls::stream<MInv_T>& matrixInStrm,
 		for (int k = 0; k <= j; k++) {
 #pragma HLS loop_tripcount max = (1 + (RowsColsA/2))
 
-
-			prod_column_top = -hls::x_conj(L_internal[j][k])*Diag[k];
-
+			//预存 i * d
+			mymult_complex_real(-hls::x_conj(L_internal[j][k]),Diag[k],prod_column_top);
 
 			row_loop:
 			for (int i = 0; i < RowsColsA; i++) {
-				// IMPORTANT: row_loop must not merge with sum_loop as the merged loop becomes variable length and HLS will struggle
-				// with scheduling
+				// 不要和sum loop合并，调度困难？
 				//#pragma HLS LOOP_FLATTEN off
-#pragma HLS PIPELINE II = 1
+				
+				#pragma HLS PIPELINE II = 1
 				#pragma HLS UNROLL FACTOR = 1
 
 				if (i > j) {
 					prod = L_internal[i][k] * prod_column_top;
 
-//					std::cout<<"aaa" <<prod<<std::endl;
-					//prod_cast_to_sum = prod * new_L;
 
+					// 遍历起始: 找到A元
 					if (k == 0) {
 						// Prime first sum
 						A_cast_to_sum = A[i][j];
 						product_sum = A_cast_to_sum;
-					} else {
+					} 
+					
+					// 遍历中途: 累加
+					else {
 						product_sum = product_sum_array[i];
 					}
 
 					if (k < j) {
-						// Accumulate row sum of columns
+						// 遍历中途: 累加
 						product_sum_array[i] = product_sum + prod;
-//						std::cout<<"product_sum_array" <<product_sum_array[i]<<std::endl;
-					} else {
 
+					} 
+					// 遍历结束: 累加
+					else {
 
 						// Final calculation for off diagonal value
 						prod_cast_to_off_diag = product_sum;
-//						std::cout<<"aaa" <<prod_cast_to_off_diag<<std::endl;
+
 						// Diagonal is stored in its reciprocal form so only need to multiply the product sum
 
 						mymult_complex_real(prod_cast_to_off_diag, new_L_diag_recip, new_L_off_diag);
-//						std::cout<<"prod_cast_to_off_diag" <<prod_cast_to_off_diag<<std::endl;
 
-//						std::cout<<"new_L_diag_recip" <<new_L_diag_recip<<std::endl;
-						// Round to target format using method specifed by traits defined types.
+						// 定点数round
 						new_L = new_L_off_diag;
-//						std::cout<<"bbb" <<new_L<<std::endl;
 
 
-
-
-
-						// Build sum for use in diagonal calculation for this row.
-						square_sum_array[i] += hls::x_conj(new_L) * new_L* Diag[k];
-//						std::cout<<"xxx"    <<square_sum_array[i]<<std::endl;
-						// Store result
+						// 存储 i*d*i
+						mymult_conj(new_L, square_sum);
+						square_sum_array[i] += square_sum* Diag[k];
+//						
+						// off元素最终赋值
 						L_internal[i][j] = new_L;
-						// NOTE: Use the upper/lower triangle zeroing in the subsequent loop so the double memory access
-						// does not
-						// become a bottleneck
-						// o Results in a further increase of DSP resources due to the higher II of this loop.
-						// o Retaining the zeroing operation here can give this a loop a max II of 2 and HLS will
-						// resource share.
-						L[i][j] = new_L;                                  // Store in lower triangle
-//						std::cout<<"aaa" <<new_L<<std::endl;
+						// 另起置0循环
+						// o 提高II，DSP要求多
+						// o 置0留在这里的话最多II=2
+						
+						L[i][j] = new_L;       
 						if (!ARCH2_ZERO_LOOP) L[j][i] = 0; // Zero upper
 					}
 				}
 			}
 		}
 	}
+	
 	// Zero upper/lower triangle
-	// o Use separate loop to ensure main calcuation can achieve an II of 1
-	// o As noted above this may increase the DSP resources.
+	// o 单拎达到 II=1
+	// o DSP 增多
 	// o Required when unrolling the inner loop due to array dimension access
 	if (ARCH2_ZERO_LOOP) {
 		zero_rows_loop:
 		for (int i = 0; i < RowsColsA - 1; i++) {
 			zero_cols_loop:
 			for (int j = i + 1; j < RowsColsA; j++) {
-				// Define average trip count for reporting, loop reduces in length for every iteration of zero_rows_loop
+				// 1+N/2 次循环
 #pragma HLS loop_tripcount max = (1 + (RowsColsA/2))
 				//#pragma HLS PIPELINE
 				L[i][j] = 0; // Zero upper
@@ -617,6 +621,9 @@ void My_LDL(hls::stream<MInv_T>& matrixInStrm,
 
 	}
 }
+
+
+
 
 
 
